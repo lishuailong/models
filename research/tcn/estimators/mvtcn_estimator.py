@@ -30,7 +30,7 @@ class MVTCNEstimator(base_estimator.BaseEstimator):
   """Multi-view TCN base class."""
 
   def __init__(self, config, logdir):
-    super(MVTCNEstimator, self).__init__(config, logdir)
+    super(MVTCNEstimator, self).__init__(config, logdir)     #调用父类的方法
 
   def _pairs_provider(self, records, is_training):
     config = self._config
@@ -73,17 +73,17 @@ class MVTCNEstimator(base_estimator.BaseEstimator):
                                images_concat):
     image_summaries = self._config.logging.summary.image_summaries
     if image_summaries and not self._config.use_tpu:
-      batch_pairs_summary = tf.concat(
+      batch_pairs_summary = tf.concat(                                       #按照指明的轴连接矩阵
           [anchor_images, positive_images], axis=2)
-      tf.summary.image('training/mvtcn_pairs', batch_pairs_summary)
-      tf.summary.image('training/images_preprocessed_concat', images_concat)
+      tf.summary.image('training/mvtcn_pairs', batch_pairs_summary)           #输出带图像的probuf
+      tf.summary.image('training/images_preprocessed_concat', images_concat)          
 
 
 class MVTCNTripletEstimator(MVTCNEstimator):
   """Multi-View TCN with semihard triplet loss."""
 
   def __init__(self, config, logdir):
-    super(MVTCNTripletEstimator, self).__init__(config, logdir)
+    super(MVTCNTripletEstimator, self).__init__(config, logdir)              #参数是什么意思？从哪里来？
 
   def construct_input_fn(self, records, is_training):
     """See base class."""
@@ -98,7 +98,7 @@ class MVTCNTripletEstimator(MVTCNEstimator):
        positive_labels,
        anchor_images,
        positive_images) = self._pairs_provider(
-           records, is_training)(batch_size=batch_size)
+           records, is_training)(batch_size=batch_size)                    #两个等号是什么意思？
       if is_training:
         self._collect_image_summaries(anchor_images, positive_images,
                                       images_concat)
@@ -110,11 +110,11 @@ class MVTCNTripletEstimator(MVTCNEstimator):
   def define_loss(self, embeddings, labels, is_training):
     """See base class."""
     margin = self._config.triplet_semihard.margin
-    loss = tf.contrib.losses.metric_learning.triplet_semihard_loss(
+    loss = tf.contrib.losses.metric_learning.triplet_semihard_loss(       #Triplet loss被用来进行人脸嵌入的训练
         labels=labels, embeddings=embeddings, margin=margin)
     self._loss = loss
     if is_training and not self._config.use_tpu:
-      tf.summary.scalar('training/triplet_semihard', loss)
+      tf.summary.scalar('training/triplet_semihard', loss)                #对标量数据汇总和记录
     return loss
 
   def define_eval_metric_ops(self):
@@ -151,7 +151,7 @@ class MVTCNNpairsEstimator(MVTCNEstimator):
 
   def define_loss(self, embeddings, labels, is_training):
     """See base class."""
-    embeddings_anchor, embeddings_positive = tf.split(embeddings, 2, axis=0)
+    embeddings_anchor, embeddings_positive = tf.split(embeddings, 2, axis=0)    #数据切割
     loss = tf.contrib.losses.metric_learning.npairs_loss(
         labels=labels, embeddings_anchor=embeddings_anchor,
         embeddings_positive=embeddings_positive)

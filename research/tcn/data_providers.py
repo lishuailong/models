@@ -27,7 +27,7 @@ import tensorflow as tf
 
 def record_dataset(filename):
   """Generate a TFRecordDataset from a `filename`."""
-  return tf.data.TFRecordDataset(filename)
+  return tf.data.TFRecordDataset(filename)                                       #创建dataset数据集
 
 
 def full_sequence_provider(file_list, num_views):

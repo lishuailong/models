@@ -23,9 +23,9 @@ import numpy as np
 from estimators.get_estimator import get_estimator
 from utils import util
 import tensorflow as tf
-tf.logging.set_verbosity(tf.logging.INFO)
+tf.logging.set_verbosity(tf.logging.INFO)                                           #带有INFO级别的日志
 
-tf.flags.DEFINE_string(
+tf.flags.DEFINE_string(                                                             #在用命令行执行程序时，需要传些参数
     'config_paths', '',
     """
     Path to a YAML configuration files defining FLAG values. Multiple files
@@ -59,17 +59,17 @@ def compute_average_alignment(
   abs(|time_i - knn_time|) / sequence_length
   """
   all_alignments = []
-  for _, view_embeddings in seqname_to_embeddings.iteritems():
+  for _, view_embeddings in seqname_to_embeddings.iteritems():                #迭代器
     for idx_i in range(num_views):
       for idx_j in range(idx_i+1, num_views):
-        embeddings_view_i = view_embeddings[idx_i]
+        embeddings_view_i = view_embeddings[idx_i]                            #view_embeddings？？？？
         embeddings_view_j = view_embeddings[idx_j]
 
         seq_len = len(embeddings_view_i)
 
         times_i = np.array(range(seq_len))
         # Get the nearest time_index for each embedding in view_i.
-        times_j = np.array([util.KNNIdsWithDistances(
+        times_j = np.array([util.KNNIdsWithDistances(                         #？？？？？？
             q, embeddings_view_j, k=1)[0][0] for q in embeddings_view_i])
 
         # Compute sequence view pair alignment.

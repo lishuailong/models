@@ -25,7 +25,7 @@ from utils import util
 import tensorflow as tf
 tf.logging.set_verbosity(tf.logging.INFO)
 
-tf.flags.DEFINE_string(
+tf.flags.DEFINE_string(                                                           #传入参数
     'config_paths', '',
     """
     Path to a YAML configuration files defining FLAG values. Multiple files

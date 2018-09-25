@@ -51,15 +51,15 @@ def full_sequence_provider(file_list, num_views):
     return views, task, seq_len
 
   data_files = tf.contrib.slim.parallel_reader.get_data_files(file_list)
-  dataset = tf.data.Dataset.from_tensor_slices(data_files)
+  dataset = tf.data.Dataset.from_tensor_slices(data_files)                   #切分矩阵
   dataset = dataset.repeat(1)
   # Get a dataset of sequences.
   dataset = dataset.flat_map(record_dataset)
 
   # Build a dataset of TFRecord files.
-  dataset = dataset.repeat(1)
+  dataset = dataset.repeat(1)                                                #？？？？？？？？
   # Prefetch a number of opened files.
-  dataset = dataset.prefetch(12)
+  dataset = dataset.prefetch(12)                                             #？？？？？？？？
   # Use _parse_sequence to deserialize (but not decode) image strings.
   dataset = dataset.map(_parse_sequence, num_parallel_calls=12)
   # Prefetch batches of images.
@@ -90,9 +90,9 @@ def parse_labeled_example(
   for attr_key in image_attr_keys:
     features[attr_key] = tf.FixedLenFeature((), tf.string)
   for attr_key in label_attr_keys:
-    features[attr_key] = tf.FixedLenFeature((), tf.int64)
+    features[attr_key] = tf.FixedLenFeature((), tf.int64)                 #返回固定长度的张量
   parsed_features = tf.parse_single_example(example_proto, features)
-  image_only_keys = [i for i in image_attr_keys if 'image' in i]
+  image_only_keys = [i for i in image_attr_keys if 'image' in i]          #？？？？？？？
   view_image_key = image_only_keys[view_index]
   image = preprocessing.decode_image(parsed_features[view_image_key])
   preprocessed = preprocess_fn(image, is_training=False)
